@@ -1,7 +1,7 @@
 //  @author: Saran B Soman
 
 const express = require('express')
-const updateService = require('../controllers/update')
+const updateService = require('../services/update')
 
 const router = express.Router() 
 

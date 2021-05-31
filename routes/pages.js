@@ -2,7 +2,7 @@
 
 const express = require('express')
 const { verify } = require('jsonwebtoken')
-const authController = require('../controllers/pages')
+const authController = require('../services/pages')
 
 const router = express.Router()
 

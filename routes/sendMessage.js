@@ -2,7 +2,7 @@
 
 
 const express = require('express')
-const sendMessage = require('../controllers/sendMessage')
+const sendMessage = require('../services/sendMessage')
 
 const router = express.Router()
 

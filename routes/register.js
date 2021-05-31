@@ -1,7 +1,7 @@
 //  @author: Saran B Soman
 
 const express = require('express')
-const registerService = require('../controllers/register')
+const registerService = require('../services/register')
 
 const router = express.Router() 
 
