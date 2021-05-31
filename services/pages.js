@@ -2,6 +2,7 @@
 
 const jwt = require('jsonwebtoken')
 const db = require('../db')
+const {getDoctorDataStatus, getLanguages, getPatientData, getDoctorData, updateLoginStatus, getMessageDataId} = require('../query/db')
 
 //get values to patient home
 exports.patientHome = async (req, res) => {
@@ -15,12 +16,13 @@ exports.patientHome = async (req, res) => {
     console.log(user.id)
 
     
-    db.query('SELECT * FROM patient WHERE login_id = ? ',[user.id] , (error, results) => {
+    db.query(getPatientData,[user.id] , (error, results) => {
         if(error) console.log(error)
         if(results.length > 0) {
             const {name, image} = results[0]
             console.log(name)
-            db.query('SELECt * FROM login, doctor WHERE login.id = doctor.login_id AND login.status="in"', (error, row) => {
+            const status = 'in'
+            db.query(getDoctorDataStatus, [status], (error, row) => {
                 if(error) throw error
                 if(row.length > 0) {
                     // console.log(row[0])
@@ -28,7 +30,7 @@ exports.patientHome = async (req, res) => {
                     // console.log(val)
                     console.log(row)
                     // const docname = row[0].name
-                    db.query('select * from languages', (error, langs) => {
+                    db.query(getLanguages, (error, langs) => {
                         if(error) console.log(error)
                         if(langs.length > 0) {
                             return res.render('patientHome.ejs',{name, image, row, results, langs})
@@ -83,7 +85,8 @@ exports.doctorIn = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        db.query('UPDATE login SET status = "in" WHERE id = ?', [user.id], (error) => {if(error) console.log(error)})
+        const status = 'in'
+        db.query(updateLoginStatus, [status], [user.id], (error) => {if(error) console.log(error)})
         res.redirect('/doctorHome')
     } catch (error) {
         console.log(error)
@@ -95,7 +98,8 @@ exports.doctorOut = async (req, res) => {
    try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        db.query('UPDATE login SET status = "out" WHERE id = ?', [user.id], (error) => {if(error) console.log(error)})
+        const status = 'out'
+        db.query(updateLoginStatus, [status], [user.id], (error) => {if(error) console.log(error)})
         res.redirect('/doctorHome')
    } catch (error) {
        console.log(error)
@@ -117,16 +121,16 @@ exports.messageDoctor = async(req, res) => {
         // res.send(lid)
 
         
-        db.query('SELECT * FROM patient WHERE login_id = ?', [user.id], (error, result) => {
+        db.query(getPatientData, [user.id], (error, result) => {
             if(error) console.log(error)
             let {name, image} = result[0]
             // let login_id = user.id
             // let status = result[0].status
-            db.query('SELECT * FROM doctor WHERE login_id = ?', [lid], (error, values) => {
+            db.query(getDoctorData, [lid], (error, values) => {
                 if(error) console.log(error)
                 if(values.length > 0){
                     console.log('halooooo')
-                    db.query('SELECT * FROM message WHERE patient_id = ? AND doctor_id = ?', [user.id, lid], (error, msg) => {
+                    db.query(getMessageDataId, [user.id, lid], (error, msg) => {
                         if(error) console.log(error)
                         if(msg.length > 0){
                             console.log('heeeyaaaaa')
@@ -152,14 +156,14 @@ exports.messagePatient = async(req, res) => {
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
         const did = user.id
         const pid = req.query.id
-        db.query('SELECT * FROM doctor WHERE login_id = ?', [did], (error, results) => {
+        db.query(getDoctorData, [did], (error, results) => {
             if (error) console.log(error)
             if(results.length > 0) {
                 const {name, image} = results[0]
-                db.query('SELECT * FROM message WHERE patient_id = ? AND doctor_id = ?', [pid, did], (error, msg) => {
+                db.query(getMessageDataId, [pid, did], (error, msg) => {
                     if(error) console.log(error)
                     if(msg.length > 0){
-                        db.query('SELECT * FROM patient WHERE login_id = ?', [pid], (error, values) => {
+                        db.query(getPatientData, [pid], (error, values) => {
                             const id = values[0].login_id
                             if(error) console.log(error)
                             if(values.length > 0){
@@ -181,7 +185,7 @@ exports.patientProfile = async (req, res) => {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
     
-        db.query('SELECt * from patient WHERE login_id = ?', [user.id], (error, results) => {
+        db.query(getPatientData, [user.id], (error, results) => {
             if(error) console.log(error)
             if(results.length > 0) {
                 res.render('patientProfile.ejs', {results})
@@ -200,7 +204,7 @@ exports.doctorProfile = async (req, res) => {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
     
-        db.query('SELECt * from doctor WHERE login_id = ?', [user.id], (error, results) => {
+        db.query(getDoctorData, [user.id], (error, results) => {
             if(error) console.log(error)
             if(results.length > 0) {
                 res.render('doctorProfile.ejs', {results})
@@ -218,16 +222,17 @@ exports.onlineDoctors = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        db.query('SELECT * FROM patient WHERE login_id = ? ',[user.id] , (error, results) => {
+        db.query(getPatientData,[user.id] , (error, results) => {
             const {image} = results[0]
             if(error) console.log(error)
             if(results.length > 0) {
                 const {name} = results[0]
                 console.log(name)
-                db.query('SELECT * from login, doctor WHERE login.id = doctor.login_id AND login.status = "in" ', (error, row) => {
+                const status = 'in'
+                db.query(getDoctorDataStatus, [status], (error, row) => {
                     if(error) console.log(error)
                     if(row.length > 0) {
-                        db.query('select * from languages', (error, langs) => {
+                        db.query(getLanguages, (error, langs) => {
                             if(error) console.log(error)
                             if(langs.length > 0) {
                                 return res.render('patientHome.ejs',{name, image, row, results, langs})   
@@ -252,16 +257,17 @@ exports.offlineDoctors = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        db.query('SELECT * FROM patient WHERE login_id = ? ',[user.id] , (error, results) => {
+        db.query(getPatientData,[user.id] , (error, results) => {
             const {image} = results[0]
             if(error) console.log(error)
             if(results.length > 0) {
                 const {name} = results[0]
                 console.log(name)
-                db.query('SELECT * from login, doctor WHERE login.id = doctor.login_id AND login.status = "offline"', (error, row) => {
+                const status = 'out'
+                db.query(getDoctorDataStatus, [status], (error, row) => {
                     if(error) console.log(error)
                     if(row.length > 0) {
-                        db.query('select * from languages', (error, langs) => {
+                        db.query(getLanguages, (error, langs) => {
                             if(error) console.log(error)
                             if(langs.length > 0) {
                                 return res.render('patientHome.ejs',{name, image, row, results, langs})
@@ -287,7 +293,7 @@ exports.allDoctors = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        db.query('SELECT * FROM patient WHERE login_id = ? ',[user.id] , (error, results) => {
+        db.query(getPatientData,[user.id] , (error, results) => {
             const {image} = results[0]
             if(error) console.log(error)
             if(results.length > 0) {
@@ -296,7 +302,7 @@ exports.allDoctors = async (req, res) => {
                 db.query('SELECT * from login, doctor WHERE login.id = doctor.login_id', (error, row) => {
                     if(error) console.log(error)
                     if(row.length > 0) {
-                        db.query('select * from languages', (error, langs) => {
+                        db.query(getLanguages, (error, langs) => {
                             if(error) console.log(error)
                             if(langs.length > 0) {
                                 return res.render('patientHome.ejs',{name, image, row, results, langs})
@@ -322,7 +328,7 @@ exports.sortByLanguage = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        db.query('SELECT * FROM patient WHERE login_id = ? ',[user.id] , (error, results) => {
+        db.query(getPatientData,[user.id] , (error, results) => {
             const {image} = results[0]
             if(error) console.log(error)
             if(results.length > 0) {
@@ -331,7 +337,7 @@ exports.sortByLanguage = async (req, res) => {
                 db.query('SELECT * from login, doctor WHERE login.id = doctor.login_id', (error, row) => {
                     if(error) console.log(error)
                     if(row.length > 0) {
-                        db.query('select * from languages', (error, langs) => {
+                        db.query(getLanguages, (error, langs) => {
                             if(error) console.log(error)
                             if(langs.length > 0) {
                                 db.query('SELECT * from languages, doctor WHERE languages.login_id = doctor.login_id GROUP BY languages.login_id', (error, sort) => {

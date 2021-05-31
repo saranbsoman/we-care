@@ -3,6 +3,7 @@
 const bcrypt = require('bcryptjs')
 const {schema, patientSchema} = require('../validation')
 const db = require('../db')
+const {dupEmail, insertPatient, insertLanguage, insertLogin, insertDoctor} = require('../query/db')
 
 //function for patient registration
 exports.registerPatient = async(req, res) => {
@@ -21,7 +22,7 @@ exports.registerPatient = async(req, res) => {
         console.log(lang)
 
 
-        db.query('SELECT email from login WHERE email = ?', [email], async (error, results) => {
+        db.query(dupEmail, [email], async (error, results) => {
             if(error) {
                 console.log(error)
             }
@@ -41,12 +42,12 @@ exports.registerPatient = async(req, res) => {
                 let hashedPswd = await bcrypt.hash(pswd, 8)
                 console.log(hashedPswd)
 
-                db.query('INSERT INTO login SET ?', {email: email, password: hashedPswd, usertype: 'patient'}, (error, results) => {
+                db.query(insertLogin, {email: email, password: hashedPswd, usertype: 'patient'}, (error, results) => {
                     if(error) {
                         console.log('error in login table')
                     } else {
                         console.log(results)
-                        db.query('SELECT id from login WHERE email = ?', [email], (error, rows, fields) => {
+                        db.query(dupEmail, [email], (error, rows, fields) => {
                             if(error) console.log('error in selecting from login')
                             else {
                                 console.log(rows[0].id)
@@ -63,21 +64,22 @@ exports.registerPatient = async(req, res) => {
                                 // }
 
 
-                                db.query('INSERT INTO patient SET ?', {name: name, age: age, gender: gender, contactno: phno, image: img_name, login_id: rows[0].id}, (error, results) => {
+                                db.query(insertPatient, {name: name, age: age, gender: gender, contactno: phno, image: img_name, login_id: rows[0].id}, (error, results) => {
                                     if (error) {
                                         console.log(error)
                                     } else {
 
                                         if(lang.length > 4) {
-                                            db.query('INSERT INTO languages (language, login_id) VALUES (?, ?)', [lang, login_id], (error) => {
+                                            let language = lang
+                                            db.query(insertLanguage, {language, login_id}, (error) => {
                                                 if(error) console.log(error)
                                             })
                                         } else {  
                                             lang.forEach(element => {
                                                 let lan = ''
                                                 console.log(element)
-                                                lan = element
-                                                db.query('INSERT INTO languages (language, login_id) VALUES (?, ?)', [lan, login_id], (error) => {
+                                                language = element
+                                                db.query(insertLanguage, {language, login_id}, (error) => {
                                                     if(error) console.log(error)
                                                 })
                                             })
@@ -128,7 +130,7 @@ exports.registerDoctor = (req, res) => {
         //     })
         // }
 
-        db.query('SELECT email from login WHERE email = ?', [email], async (error, results) => {
+        db.query(dupEmail, [email], async (error, results) => {
             if(error) {
                 console.log(error)
             }
@@ -148,12 +150,12 @@ exports.registerDoctor = (req, res) => {
                 let hashedPswd = await bcrypt.hash(pswd, 8)
                 console.log(hashedPswd)
 
-                db.query('INSERT INTO login SET ?', {email: email, password: hashedPswd, usertype: 'doctor'}, (error, results) => {
+                db.query(insertLogin, {email: email, password: hashedPswd, usertype: 'doctor'}, (error, results) => {
                     if(error) {
                         console.log('error in login table')
                     } else {
                         console.log(results)
-                        db.query('SELECT id from login WHERE email = ?', [email], (error, rows, fields) => {
+                        db.query(dupEmail, [email], (error, rows, fields) => {
                             if(error) console.log('error in selecting from login')
                             else {
                                 console.log(rows[0].id)
@@ -168,7 +170,7 @@ exports.registerDoctor = (req, res) => {
                                 // file.mv('public/images/upload/'+img_name) 
                                 
 
-                                db.query('INSERT INTO doctor SET ?', {name: name, age: age, gender: gender, contactno: phno, specification: spec, image: img_name, login_id: rows[0].id}, (error, results) => {
+                                db.query(insertDoctor, {name: name, age: age, gender: gender, contactno: phno, specification: spec, image: img_name, login_id: rows[0].id}, (error, results) => {
                                     if (error) {
                                         console.log(error)
                                     } else {
@@ -177,15 +179,16 @@ exports.registerDoctor = (req, res) => {
                                         // lang.forEach(i  => i++)
                                         console.log(`Length of lang ${lang.length}`)
                                         if(lang.length > 4) {
-                                            db.query('INSERT INTO languages (language, login_id) VALUES (?, ?)', [lang, login_id], (error) => {
+                                            const language = lang
+                                            db.query(insertLanguage, {language, login_id}, (error) => {
                                                 if(error) console.log(error)
                                             })
                                         } else {  
                                             lang.forEach(element => {
                                                 let lan = ''
                                                 console.log(element)
-                                                lan = element
-                                                db.query('INSERT INTO languages (language, login_id) VALUES (?, ?)', [lan, login_id], (error) => {
+                                                language = element
+                                                db.query(insertLanguage, {language, login_id}, (error) => {
                                                     if(error) console.log(error)
                                                 })
                                             })

@@ -3,6 +3,7 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const db = require('../db')
+const {dupEmail, getDoctorData, getPatientData, getLoginData, updateLoginStatus} = require('../query/db')
 
 
 //function to login
@@ -18,7 +19,7 @@ exports.login = async (req, res) => {
             })
         }
 
-        db.query('SELECT * from login WHERE email = ?', [email], async (error, results) => {
+        db.query(dupEmail, [email], async (error, results) => {
             
             if(error) console.log(error)
             else if ( results == '') {
@@ -60,28 +61,30 @@ exports.login = async (req, res) => {
                 
                 console.log(userId.id)
 
-                db.query('SELECT * FROM login WHERE id = ?', [userId.id], (error, results) => {
+                db.query(getLoginData, [userId.id], (error, results) => {
                     if(error) console.log('error getting data from login')
                     else {
                         const user = results[0].usertype
                         console.log(user)
                         // res.send(user)
                         if( user == 'doctor')  {
-                            db.query('SELECT name FROM doctor WHERE login_id = ?', [userId.id], (error, result) => {
+                            db.query(getDoctorData, [userId.id], (error, result) => {
                                 if(error) console.log(error)
                                 let name = result[0].name
                                 console.log(`Name is ${name}`)
-                                db.query('UPDATE login SET status = "online" WHERE id = ?', [userId.id], (error) => {if(error) console.log(error)})
+                                const status = 'online'
+                                db.query(updateLoginStatus, [status, userId.id], (error) => {if(error) console.log(error)})
                                 res.redirect('/doctorHome')
                             })
                             
 
                         } else if ( user == 'patient' ) {
-                            db.query('SELECT name FROM patient WHERE login_id = ?', [userId.id], (error, result) => {
+                            db.query(getPatientData, [userId.id], (error, result) => {
                                 if(error) console.log(error)
                                 let name = result[0].name
                                 console.log(`Name is ${name}`)
-                                db.query('UPDATE login SET status = "online" WHERE id = ?', [userId.id], (error) => {if(error) console.log(error)})
+                                const status = 'offline'
+                                db.query(updateLoginStatus, [status, userId.id], (error) => {if(error) console.log(error)})
                                 res.redirect('/patientHome')
                             })
                             

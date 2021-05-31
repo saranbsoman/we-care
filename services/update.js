@@ -2,6 +2,7 @@
 
 const jwt = require('jsonwebtoken')
 const db = require('../db')
+const {updatePatient, updateDoctor} = require('../query/db')
 
 
 //update patient profile
@@ -23,7 +24,7 @@ exports.updatePatientProfile = async (req, res) => {
         file.mv('public/images/upload/'+file.name) 
         }
 
-        db.query('UPDATE patient SET name = ?, age = ?, gender = ?, contactno = ?, image = ? WHERE login_id = ?', [name, age, gender, phno, img_name, user.id], (error) => { if(error) console.log(error)})
+        db.query(updatePatient, [name, age, gender, phno, img_name, user.id], (error) => { if(error) console.log(error)})
         res.redirect('/patientHome')
     } catch (error) {
         console.log(error)
@@ -45,7 +46,7 @@ exports.updateDoctorProfile = async (req, res) => {
           file.mv('public/images/upload/'+file.name) 
         }
     
-        db.query('UPDATE doctor SET name = ?, age = ?, gender = ?, contactno = ?, specification = ?, image = ? WHERE login_id = ?', [name, age, gender, phno, spec, img_name, user.id], (error) => { if(error) console.log(error) })
+        db.query(updateDoctor, [name, age, gender, phno, spec, img_name, user.id], (error) => { if(error) console.log(error) })
         res.redirect('/doctorHome')
     } catch (error) {
         console.log(error)

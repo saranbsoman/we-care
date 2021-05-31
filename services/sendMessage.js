@@ -2,6 +2,7 @@
 
 const jwt = require('jsonwebtoken')
 const db = require('../db')
+const {insertMessage} = require('../query/db')
 
 
 //send messages to doctor
@@ -12,7 +13,7 @@ exports.sendMessageToDoctor = async (req, res) => {
         patient_id = user.id
         const { message, doctor_id } = req.body
         console.log(req.body)
-        db.query('INSERT INTO message set ?',{message, patient_id, doctor_id, sender:'patient'}, (error, results) => {
+        db.query(insertMessage,{message, patient_id, doctor_id, sender:'patient'}, (error, results) => {
             if(error) console.log(error)
             if(results) {
                 console.log('message sent')
@@ -32,7 +33,7 @@ exports.sendMessageToPatient = async (req, res) => {
         doctor_id = user.id
         const { message, patient_id } = req.body
         console.log(req.body)
-        db.query('INSERT INTO message set ?',{message, patient_id, doctor_id, sender: 'doctor'}, (error, results) => {
+        db.query(insertMessage,{message, patient_id, doctor_id, sender: 'doctor'}, (error, results) => {
             if(error) console.log(error)
             if(results) {
                 console.log('message sent')
