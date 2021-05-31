@@ -1,0 +1,86 @@
+<!-- @author: Saran B Soman -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+    <title>We Care</title>
+</head>
+<body>
+    <nav>
+        <%
+             if (name) { %>
+         <h4>Welcome <%= name %> </h4>
+        <% } %> 
+        <ul>
+            
+            <li><a href="/patientProfile">My Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+            <% if(image) {%>
+            <li class="img-li"><img class="img-small" src="/images/upload/<%= image %>"></li>
+            <% }%>
+        </ul>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card-patientHome">
+            <div class="pat-cardnav">
+                    <div class="btn-online" onclick="window.location.href = '/onlineDoctors'">
+                         Online  
+                    </div>
+                    <div class="btn-offline" onclick="window.location.href = '/offlineDoctors'">
+                        Offline  
+                    </div>
+                    <div class="btn-offline" onclick="window.location.href = '/allDoctors'">
+                        All Doctors 
+                    </div>
+            </div>
+            <div class="under-nav-div">
+                <p class="under-nav" onclick="window.location.href = '/sortByLanguage'">Sort by language</p>
+            </div>
+            
+            <% if(row) { %>
+                <% row.forEach(user => { %>
+                    <% 
+                    const lid = user.login_id
+
+                     %>
+                     
+                    
+                <div class="card-body-patientHome" onclick="window.location.href = '/messageDoctor?id=<%= lid %>' ">
+                    
+                    <div class="doc-cards">
+                        <div class="img-li"><img class="img-small" src="/images/upload/<%= user.image %>"></div>
+                        <h2>Dr <%= user.name %> </h2>
+                        <div class="card-spec"><p><b><%= user.specification %></b></p></div>
+                        <% if(langs) {%>
+                            <% langs.forEach(lan => { %>
+                                <% if(lan.login_id === user.login_id) { %>
+                                    <div class="lang">
+                                        <p><%= lan.language %></p>
+                                    </div>
+                                <% } %>
+                            <% }) %>
+                        <% } %>
+                    </div>
+                </div>
+                    
+                            
+            
+                <% }) %>
+            <% } %>
+            <% if(row == ''){%>
+                <h3>Nobody here</h3>
+            <% } %>
+        </div>
+
+    </div>
+    <script src="/script/function.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+</html>

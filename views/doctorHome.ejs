@@ -1,0 +1,91 @@
+<!-- @author: Saran B Soman -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+    <title>We Care</title>
+</head>
+<body>
+    <nav>
+        <%
+             if (name) { %>
+         <h4>Welcome <%= name %> </h4>
+        <% } %> 
+        <ul>
+            <% if(status == 'out'|| status == 'online') { %>
+                    <li><a href="/doctorIn">IN</a></li>
+            <% } %>
+            <% if(status == 'in') { %>
+                    <li><a href="/doctorOut">OUT</a></li>
+            <% } %>
+            <li><a href="/doctorProfile">My Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+            <% if(image) {%>
+            <li ><img class="img-small" src="/images/upload/<%= image %>"></li>
+            <% }%>
+        </ul>
+    </nav>
+
+    <div class="doc-container mt-4">
+        <div class="doc-card">
+                
+            <div class="card-doctorHome">
+            
+                <% if(status == 'out'|| status == 'online') { %>
+                    <div class="pat-cardnav">
+                        <div class="btn-online" onclick="window.location.href = '/doctorIn'">
+                            IN   
+                        </div>
+                        <h3>Press IN to see messages</h3>
+                    </div>
+                <% } %>
+            
+            
+                <% if(status == 'in') { %>
+                    <div class="pat-cardnav">
+                        <div class="btn-offline" onclick="window.location.href = '/doctorOut'">
+                            OUT  
+                        </div>
+                    </div>
+                    <% if(row) { %>
+                    
+                    <div class="card-body-doctorHome">
+                        <% row.forEach(user => { %>
+                        <div class="card-tabs" onclick="window.location.href = '/messagePatient?id=<%= user.login_id %>'">
+                            
+                            <img class="img-small" src="/images/upload/<%= user.image %>">
+                            <div style="padding: 10px; font-size: larger;"><%= user.name %></div>
+                    
+                        </div>
+                        <% }); %>     
+                    </div>
+                        
+                    <% } %>
+
+                    <% if(row == ''){%>
+                        <h4>No messages</h4>
+                        <% } %>
+
+                            <% } %>
+            
+            
+            
+            </div>
+
+           
+            
+            
+
+
+            
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!-- @author: Saran B Soman -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css">
+    <title>We Care</title>
+</head>
+<body>
+    <nav>
+        <h4>Home</h4>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/login">Login</a></li>
+        </ul>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <form action="/register/registerDoctor" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter name" name="name" required>
+                        <h6>[Name should be minimum 3 characters long]</h6>
+                      </div>
+                      <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="text" class="form-control" id="age" placeholder="Enter age" name="age" required>
+                        <h6>[Age should be mininum 2 numbers]</h6>
+                      </div>
+                      <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <input type="radio" name="gender" value="male">Male
+                        <input type="radio" name="gender" value="female">Female
+                      </div>
+                      <div class="form-group">
+                        <label for="contactno">Contact no</label>
+                        <input type="text" class="form-control" id="phno" placeholder="Enter Phone number" name="phno" required>
+                        <h6>[Contact number should be minimum 10 numbers]</h6>
+                      </div>
+                      <div class="form-group">
+                        <label for="specification">Specification</label>
+                        <select class="form-control" id="spec" placeholder="Enter Specification" name="spec" required>
+                          <option value="Pediatrician">Pediatrician</option>
+                          <option value="General Surgeon">General Surgeon</option>
+                          <option value="Gynecologist">Gynecologist</option>
+                          <option value="Cardiologist">Cardiologist</option>
+                          <option value="ENT Specialist">ENT Specialist</option>
+                          <option value="Dentist">Dentist</option>
+                        </select>
+                        <h6>[Select your specification]</h6>
+                      </div>
+
+                      <div class="multipleSelection">
+                        <div class="selectBox" 
+                            onclick="showCheckboxes()">
+                            <select>
+                                <option>Select languages</option>
+                            </select>
+                            <div class="overSelect"></div>
+                        </div>
+              
+                        <div id="checkBoxes">
+                            <label for="first">
+                                <input type="checkbox" id="english" value="English" name="lang" />
+                                English
+                            </label>
+                              
+                            <label for="second">
+                                <input type="checkbox" id="arabic" value="Arabic" name="lang" />
+                                Arabic
+                            </label>
+                            <label for="third">
+                                <input type="checkbox" id="spanish" value="Spanish" name="lang" />
+                                Spanish
+                            </label>
+                            <label for="fourth">
+                                <input type="checkbox" id="french" value="French" name="lang" />
+                                French
+                            </label>
+                        </div>
+                    </div>
+
+                      <!-- <div class="form-group">
+                        <label for="language">Add languages</label>
+                      </div>
+
+                      <div class="form-group">
+                        <input type="checkbox"  id="english" value="English" name="lang" >
+                        <label for="language">English</label>
+                      </div>
+
+                      <div class="form-group">
+                        <input type="checkbox"  id="arabic" value="Arabic" name="lang" >
+                        <label for="language">Arabic</label>
+                      </div>
+
+                      <div class="form-group">
+                        <input type="checkbox"  id="spanish" value="Spanish" name="lang" >
+                        <label for="language">Spanish</label>
+                      </div> -->
+
+                    <div class="form-group">
+                      <label for="email">Email</label>
+                      <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+                      <h6>[Email is required]</h6>
+                    </div>
+                    <div class="form-group">
+                      <label for="pwd">Password</label>
+                      <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd" required>
+                      <h6>[Password should be minimum 5 characters long]</h6>
+                    </div>
+                    <div class="form-group">
+                        <label for="pwd">Confirm Password</label>
+                        <input type="password" class="form-control" id="pwdConfirm" placeholder="Enter confirm password" name="pswdConfirm" required> 
+                        <h6>[Password should be minimum 5 characters long]</h6>
+                      </div>
+                    
+                    <button style="margin: 10px 350px" type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+            </div>
+            <% if (message) { %>
+                <h4 class="alert alert-danger mt-4"> <%= message %></h4>
+               <% } %> 
+          </div>       
+    </div>
+
+    <script>
+      var show = true;
+          
+          function showCheckboxes() {
+              var checkboxes = 
+                  document.getElementById("checkBoxes");
+
+              if (show) {
+                  checkboxes.style.display = "block";
+                  show = false;
+              } else {
+                  checkboxes.style.display = "none";
+                  show = true;
+              }
+          }
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+</html>

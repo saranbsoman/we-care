@@ -1,0 +1,335 @@
+body {
+    background-color: rgb(180, 180, 180);
+}
+nav {
+    align-items: center;
+    background-color: rgb(116, 27, 71);
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px 30px;
+    margin: 15px 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+nav ul {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+nav li {
+    align-items: center;
+    display: flex;
+    list-style: none;
+    padding: 5px 8px;
+    
+}
+
+nav li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    /* outline-style:solid;
+    outline-color: rgb(255, 215, 246); */
+    padding: 5px 8px;
+}
+
+
+nav li a:hover {
+    border-radius: 10px;
+    background-color: rgb(255, 215, 246);
+    text-decoration: none;
+    color: rgb(116, 27, 71);
+}
+
+.container {
+    /* background-color: rgb(75, 16, 52); */
+    display: block;
+    /* block-size:initial; */
+    justify-content: center;
+    border-style: none;
+    padding: 0px 250px;
+    
+}
+.login-card{
+    display: block;
+    justify-content: center;
+    width: 250px;
+    margin: 100px 250px;
+}
+.card {
+    display: contents;
+    justify-content: center;
+    /* background-color: none; */
+    /* align-items: center; */
+}
+.card-body{
+    display: block;
+    justify-content: center;
+    /* background-color: rgb(165, 165, 165); */
+}
+
+.card-patientHome {
+    display: block;
+    background-color: #ddd;
+    padding: 10px 10px 10px 10px;
+    margin: 100px;
+    
+}
+
+.card-body-patientHome {
+    display: block;
+    margin: 5px;
+    /* align-items: flex-end; */
+    /* justify-items: right; */
+    /* background-color: #fff; */
+    
+}
+
+.doc-cards{
+    color: rgb(116, 27, 71);
+    align-items:flex-end;
+    /* justify-content:right; */
+    margin: 15px 5px;
+    padding: 5px;
+    display: flex;
+    border-radius: 10px;
+    border-color: rgb(116, 27, 71);
+    border-style: solid;
+    background-color: rgb(255, 215, 246);
+    
+}
+.doc-cards:hover {
+    /* color: rgb(116, 27, 71); */
+    /* border-color: rgb(255, 215, 246); */
+    background-color: rgb(218, 218, 218);  
+}
+
+.doc-cards p {
+    justify-content: space-between;
+    padding: 5px;    
+    border-radius: 10px;
+    border-style: hidden;
+    border-color: rgb(116, 27, 71);
+    background-color: rgb(255, 255, 255);
+}
+.card-spec{
+    justify-content: right;
+}
+.under-nav-div{
+    margin: 5px 5px 5px 5px;
+    display: flex;
+}
+.under-nav {
+    padding: 5px;
+    color: rgb(116, 27, 71);
+    border-radius: 10px;
+    border-style: hidden;
+    border-color: rgb(116, 27, 71);
+    background-color: rgb(255, 255, 255);
+}
+
+.doc-cards h2 {
+    color: rgb(116, 27, 71);
+    padding: 0px 20px;
+}
+.card-body {
+    justify-content: center;
+    border: none;
+    border-radius: 25px;
+    background-color: none;
+    margin: 5px;
+    align-items: center;
+}
+
+.btn {
+    color: #fff;
+    background-color: rgb(116, 27, 71);
+    border-color: black;
+}
+
+/* .card-body:hover {
+    color: black;
+    background-color: antiquewhite;
+} */
+
+.card-body h2{
+    color: #fff;
+}
+
+.card-body p{
+    /* display: block; */
+    /* align-content:space-between; */
+    border-radius: 20px;
+    outline: rgb(219, 217, 217);
+    background-color: #fff;
+}
+/* form {
+    display: grid;
+    margin: 50px 300px;
+    padding: 50px;
+   
+} */
+.lang {
+    float: right;
+    /* display: block; */
+}
+
+.pat-cardnav{
+    display: flex;
+    margin: 5px 5px;
+    padding: 10px;
+    border-radius: 10px;
+    justify-content: space-around;
+    background-color: #fff;
+    color: rgb(77, 11, 57);
+}
+
+.btn-online, .btn-offline {
+    padding: 5px;
+    color: #fff;
+    border-radius: 10px;
+    border-style: solid;
+    background-color: rgb(77, 11, 57);
+}
+.btn-online:hover, .btn-offline:hover{
+    padding: 5px;
+    color: rgb(77, 11, 57);
+    border-radius: 10px;
+    border-style: solid;
+    background-color: rgb(255, 215, 246);
+}
+
+/* .btn-offline {
+    color: #fff;
+    border-radius: 10px;
+    outline: rgb(219, 217, 217);
+    background-color: rgb(77, 11, 57);
+} */
+.pro-pic{
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    width: 150px;
+}
+.img-small{
+   height: 40px;
+   width: 40px;
+   align-items: center;
+   border-top-left-radius: 50% 50%;
+  border-top-right-radius: 50% 50%;
+  border-bottom-right-radius: 50% 50%;
+  border-bottom-left-radius: 50% 50%; 
+}
+.chat-body{
+    display: block;
+    background-color:darkgrey;
+    padding: 10px 10px 10px 10px;
+    margin: 50px 200px;
+    width: 400px;
+    
+}
+.chat-nav {
+    display: flex;
+    justify-content: space-between;
+    
+}
+.msg-style{
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.msg-box{
+    border: #fff;
+}
+#txt-box {
+    width: 320px;
+}
+#send {
+    padding: 5px;
+    color: #fff;
+    border-radius: 10px;
+    border-style: solid;
+    background-color: rgb(77, 11, 57);
+}
+.doc-container {
+    display: flex;
+    justify-content: center;
+}
+.doc-card {
+    margin: 50px;
+    width: 500px;
+    background-color:darkgrey;
+    padding: 10px 10px 10px 10px;
+}
+.card-doctorHome {
+    /* background-color: aquamarine; */
+    display: block;
+    padding: 10px;
+    /* background-color: #fff; */
+    
+}
+.card-body-doctorHome {
+
+    padding: 5px 0px;
+    
+    /* background-color: #fff; */
+}
+.card-body-doctorHome .card-tabs {
+    display: flex;
+    color: #fff;
+    margin: 5px;
+    padding: 10px 10px 0px 10px;
+    border-radius: 10px;
+    background-color: rgb(161, 42, 102);
+} 
+.card-body-doctorHome .card-tabs:hover{
+    background-color: rgb(77, 11, 57);
+    
+}
+.card-tabs {
+    margin: 5px;
+}
+#tab {
+    display: block;
+    font-size: larger;
+    padding: 10px;
+}
+.multipleSelection {
+    width: 300px;
+    background-color: #BCC2C1;
+}
+
+.selectBox {
+    position: relative;
+}
+
+.selectBox select {
+    width: 100%;
+    font-weight: bold;
+}
+
+.overSelect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+#checkBoxes {
+    display: none;
+    border: 1px #8DF5E4 solid;
+}
+
+#checkBoxes label {
+    display: block;
+}
+
+#checkBoxes label:hover {
+    background-color: #4F615E;
+}
+
