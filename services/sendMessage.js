@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken')
 const db = require('../db')
-const {insertMessage} = require('../query/db')
+const {insertMessage} = require('../query/auth')
 
 
 //send messages to doctor
@@ -20,8 +20,8 @@ exports.sendMessageToDoctor = async (req, res) => {
                 res.redirect('/messageDoctor?id='+doctor_id)
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -40,7 +40,7 @@ exports.sendMessageToPatient = async (req, res) => {
                 res.redirect('/messagePatient?id='+patient_id)
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }

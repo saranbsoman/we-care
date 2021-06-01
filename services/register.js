@@ -3,7 +3,7 @@
 const bcrypt = require('bcryptjs')
 const {schema, patientSchema} = require('../validation')
 const db = require('../db')
-const {dupEmail, insertPatient, insertLanguage, insertLogin, insertDoctor} = require('../query/db')
+const {dupEmail, insertPatient, insertLanguage, insertLogin, insertDoctor} = require('../query/auth')
 
 //function for patient registration
 exports.registerPatient = async(req, res) => {
@@ -101,8 +101,8 @@ exports.registerPatient = async(req, res) => {
         })
     }
 
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -206,8 +206,8 @@ exports.registerDoctor = (req, res) => {
             
             } 
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 
 }

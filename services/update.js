@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken')
 const db = require('../db')
-const {updatePatient, updateDoctor} = require('../query/db')
+const {updatePatient, updateDoctor} = require('../query/auth')
 
 
 //update patient profile
@@ -26,8 +26,8 @@ exports.updatePatientProfile = async (req, res) => {
 
         db.query(updatePatient, [name, age, gender, phno, img_name, user.id], (error) => { if(error) console.log(error)})
         res.redirect('/patientHome')
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -48,7 +48,7 @@ exports.updateDoctorProfile = async (req, res) => {
     
         db.query(updateDoctor, [name, age, gender, phno, spec, img_name, user.id], (error) => { if(error) console.log(error) })
         res.redirect('/doctorHome')
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }

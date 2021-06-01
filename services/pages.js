@@ -2,7 +2,7 @@
 
 const jwt = require('jsonwebtoken')
 const db = require('../db')
-const {getDoctorDataStatus, getLanguages, getPatientData, getDoctorData, updateLoginStatus, getMessageDataId} = require('../query/db')
+const {getDoctorDataStatus, getLanguages, getPatientData, getDoctorData, updateLoginStatus, getMessageDataId} = require('../query/auth')
 
 //get values to patient home
 exports.patientHome = async (req, res) => {
@@ -13,6 +13,9 @@ exports.patientHome = async (req, res) => {
     
     //get id from token
     const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
+    if(!user){
+        res.redirect('/index.ejs')
+    }
     console.log(user.id)
 
     
@@ -44,8 +47,8 @@ exports.patientHome = async (req, res) => {
             })            
         }
     })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -58,6 +61,9 @@ exports.doctorHome = async (req, res) => {
         
         //get id from token
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
+        if(!cookieToken){
+            res.redirect('/index')
+        }
         console.log(`login id => ${user.id}`)
 
         
@@ -75,8 +81,8 @@ exports.doctorHome = async (req, res) => {
                         
             })       
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 } 
 
@@ -85,11 +91,12 @@ exports.doctorIn = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        const status = 'in'
-        db.query(updateLoginStatus, [status], [user.id], (error) => {if(error) console.log(error)})
+        let status = "in"
+        console.log(status)
+        db.query('UPDATE login SET status = "in" WHERE id = ?', [user.id], (error) => {if(error) console.log(error)})
         res.redirect('/doctorHome')
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -98,12 +105,12 @@ exports.doctorOut = async (req, res) => {
    try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        const status = 'out'
-        db.query(updateLoginStatus, [status], [user.id], (error) => {if(error) console.log(error)})
+        let status = "out"
+        db.query('UPDATE login SET status = "out" WHERE id = ?', [user.id], (error) => {if(error) console.log(error)})
         res.redirect('/doctorHome')
-   } catch (error) {
-       console.log(error)
-   }
+   } catch (JsonWebTokenError) {
+    res.render('index.ejs', {name: ''})
+}
 }
 
 //display and get message page values
@@ -144,8 +151,8 @@ exports.messageDoctor = async(req, res) => {
                 }
             })       
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -174,8 +181,8 @@ exports.messagePatient = async(req, res) => {
                 })
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -193,8 +200,8 @@ exports.patientProfile = async (req, res) => {
                 console.log('No such records')
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -203,6 +210,9 @@ exports.doctorProfile = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
+        if(!cookieToken){
+            res.redirect('/index')
+        }
     
         db.query(getDoctorData, [user.id], (error, results) => {
             if(error) console.log(error)
@@ -212,8 +222,8 @@ exports.doctorProfile = async (req, res) => {
                 console.log('No such records')
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -222,7 +232,7 @@ exports.onlineDoctors = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        db.query(getPatientData,[user.id] , (error, results) => {
+        db.query(getPatientData, [user.id] , (error, results) => {
             const {image} = results[0]
             if(error) console.log(error)
             if(results.length > 0) {
@@ -247,8 +257,8 @@ exports.onlineDoctors = async (req, res) => {
                 })
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -257,13 +267,16 @@ exports.offlineDoctors = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        db.query(getPatientData,[user.id] , (error, results) => {
+        if(!user){
+            res.redirect('/index.ejs')
+        }
+        db.query(getPatientData, [user.id] , (error, results) => {
             const {image} = results[0]
             if(error) console.log(error)
             if(results.length > 0) {
                 const {name} = results[0]
                 console.log(name)
-                const status = 'out'
+                const status = "offline"
                 db.query(getDoctorDataStatus, [status], (error, row) => {
                     if(error) console.log(error)
                     if(row.length > 0) {
@@ -278,12 +291,15 @@ exports.offlineDoctors = async (req, res) => {
                             }
                             
                         })
-                    } 
+                    } else {
+                        res.render('patientHome.ejs',{name, image, row: '', results: '', langs: ''})
+
+                    }
                 })
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -293,7 +309,7 @@ exports.allDoctors = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        db.query(getPatientData,[user.id] , (error, results) => {
+        db.query(getPatientData, [user.id] , (error, results) => {
             const {image} = results[0]
             if(error) console.log(error)
             if(results.length > 0) {
@@ -317,8 +333,8 @@ exports.allDoctors = async (req, res) => {
                 })
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -328,7 +344,7 @@ exports.sortByLanguage = async (req, res) => {
     try {
         const cookieToken = req.cookies.jwt
         const user = await jwt.verify(cookieToken, process.env.JWT_SECRET)
-        db.query(getPatientData,[user.id] , (error, results) => {
+        db.query(getPatientData, [user.id] , (error, results) => {
             const {image} = results[0]
             if(error) console.log(error)
             if(results.length > 0) {
@@ -358,8 +374,8 @@ exports.sortByLanguage = async (req, res) => {
                 })
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
 
@@ -379,7 +395,7 @@ exports.logout = async (req, res) => {
         }
         res.cookie('jwt', cookieToken, cookieOptions)
         res.redirect('/')
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }

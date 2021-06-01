@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const db = require('../db')
-const {dupEmail, getDoctorData, getPatientData, getLoginData, updateLoginStatus} = require('../query/db')
+const {dupEmail, getDoctorData, getPatientData, getLoginData, updateLoginStatus} = require('../query/auth')
 
 
 //function to login
@@ -94,7 +94,7 @@ exports.login = async (req, res) => {
 
             }
         })
-    } catch (error) {
-        console.log(error)
+    } catch (JsonWebTokenError) {
+        res.render('index.ejs', {name: ''})
     }
 }
